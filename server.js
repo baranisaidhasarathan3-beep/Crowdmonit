@@ -58,4 +58,4 @@ http.createServer(async(req,res)=>{
     if(!f.startsWith(PUB)||!fs.existsSync(f)||fs.statSync(f).isDirectory())f=path.join(PUB,'index.html');
     res.writeHead(200,{'content-type':MIME[path.extname(f)]||'application/octet-stream'});fs.createReadStream(f).pipe(res);
   }catch(e){send(res,400,{error:'Bad request'})}
-}).listen(PORT,'0.0.0.0',()=>console.log('CrowdmoniT running on port '+PORT));
+}).listen(PORT,()=>console.log('CrowdmoniT running on port '+PORT));
