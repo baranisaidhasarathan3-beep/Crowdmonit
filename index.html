@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CrowdmoniT – know the crowd before you go</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f5f8;--card:#fff;--ink:#10243a;--mute:#5a6b7c;--line:#d9e0e7;--navy:#10243a;
+--ok:#17a05d;--warn:#f0a020;--bad:#e5392f;--okt:#dcf3e7;--warnt:#fdefd0;--badt:#fbdddb;--acc:#0b5fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1420;--card:#13212f;--ink:#eaf0f6;--mute:#93a5b6;--line:#243648;--okt:#10392a;--warnt:#3b2f10;--badt:#431f1d;--acc:#6aa0ff}}
+:root[data-theme="dark"]{--bg:#0a1420;--card:#13212f;--ink:#eaf0f6;--mute:#93a5b6;--line:#243648;--okt:#10392a;--warnt:#3b2f10;--badt:#431f1d;--acc:#6aa0ff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 'Archivo',system-ui,sans-serif}
+.wrap{max-width:540px;margin:0 auto;padding:14px 16px 120px}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.01em}
+h2{font-size:21px;margin:22px 0 4px}
+h3{font-size:17px}
+.mute{color:var(--mute);font-size:14px}
+[hidden]{display:none!important}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{width:44px;height:44px;flex:none}
+.brand b{font-size:22px;font-weight:800;letter-spacing:-.02em;display:block;line-height:1.1}
+.brand span{font-size:12.5px;color:var(--mute)}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:3px}
+.seg button{font:600 13px 'Archivo',sans-serif;border:0;background:none;color:var(--mute);padding:7px 12px;border-radius:99px;cursor:pointer}
+.seg button[aria-current="true"]{background:var(--navy);color:#fff}
+button:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 8px;margin:10px -16px 0;padding-left:16px;padding-right:16px;scrollbar-width:none}
+.chip{flex:none;font:600 14px 'Archivo',sans-serif;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:9px 14px;border-radius:99px;cursor:pointer;display:flex;align-items:center;gap:8px}
+.chip i{width:10px;height:10px;border-radius:50%}
+.chip[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+i.ok{background:var(--ok)}i.warn{background:var(--warn)}i.bad{background:var(--bad)}
+.hero{background:var(--navy);color:#fff;border-radius:22px;padding:20px;display:flex;gap:18px;align-items:center;margin-top:6px}
+.signal{background:#06121f;border-radius:40px;padding:10px 9px;display:flex;flex-direction:column;gap:9px;flex:none}
+.lamp{width:34px;height:34px;border-radius:50%;background:#1d2d3d}
+.lamp.on.ok{background:var(--ok);box-shadow:0 0 18px var(--ok)}
+.lamp.on.warn{background:var(--warn);box-shadow:0 0 18px var(--warn)}
+.lamp.on.bad{background:var(--bad);box-shadow:0 0 18px var(--bad)}
+.hero .where{font-size:14px;opacity:.75}
+.hero .v{font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-.02em;margin:2px 0 6px}
+.hero p{margin:0;font-size:15px;opacity:.92}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px}
+.route{margin-top:12px;padding:12px;border-radius:12px;background:var(--bg);font-size:15px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.row:first-child{border-top:0}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;width:110px;margin-top:6px}
+.bar i{display:block;height:100%;transition:width .6s}
+.pill{font-weight:700;font-size:13px;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.pill.ok{background:var(--okt);color:var(--ok)}.pill.warn{background:var(--warnt);color:var(--warn)}.pill.bad{background:var(--badt);color:var(--bad)}
+.b3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.btn{font:700 15px 'Archivo',sans-serif;padding:13px 8px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.btn:active{transform:scale(.97)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff;display:block;text-align:center;text-decoration:none;padding:15px;font-size:16px}
+.btn.red{background:var(--bad);border-color:var(--bad);color:#fff}
+.feed{list-style:none;margin:8px 0 0;padding:0}
+.feed li{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:15px}
+.feed li:first-child{border-top:0}
+.feed .t{color:var(--mute);font-size:13px;min-width:42px}
+.sos{position:fixed;left:0;right:0;bottom:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 40%);pointer-events:none}
+.sos button{pointer-events:auto;display:block;width:100%;max-width:508px;margin:0 auto;font:800 18px 'Archivo',sans-serif;padding:16px;border:0;border-radius:16px;background:var(--bad);color:#fff;cursor:pointer;box-shadow:0 8px 20px rgba(229,57,47,.35)}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-end;justify-content:center;z-index:5}
+.sheet.open{display:flex}
+.sheet .in{background:var(--card);width:100%;max-width:540px;border-radius:22px 22px 0 0;padding:22px 16px calc(22px + env(safe-area-inset-bottom,0px))}
+.sheet .b3{grid-template-columns:1fr 1fr}
+.big{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stats div{background:var(--bg);border-radius:12px;padding:10px}
+.stats b{display:block;font-size:24px;font-weight:800;line-height:1.1}
+.stats span{font-size:12.5px;color:var(--mute)}
+.who{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.who span{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:7px 13px;font-size:14px;font-weight:500}
+ol.steps{margin:10px 0 0;padding-left:20px}
+ol.steps li{margin-bottom:8px}
+.price{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.price:first-of-type{border-top:0}
+.price b{font-size:22px;font-weight:800;white-space:nowrap}
+header{flex-wrap:wrap}
+.ctr{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.ctr:first-child{border-top:0}
+.cb{display:flex;gap:6px}
+.cb .btn{padding:12px 10px;min-width:48px}
+.inp{width:100%;font:400 16px 'Archivo',sans-serif;padding:12px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <svg viewBox="0 0 48 48" role="img" aria-label="CrowdmoniT logo"><rect width="48" height="48" rx="13" fill="#10243a"/><path d="M24 6c-7.4 0-13 5.6-13 12.8C11 28 24 42 24 42s13-14 13-23.2C37 11.6 31.4 6 24 6z" fill="#fff"/><circle cx="24" cy="14" r="3.2" fill="#e5392f"/><circle cx="24" cy="21.5" r="3.2" fill="#f0a020"/><circle cx="24" cy="29" r="3.2" fill="#17a05d"/></svg>
+    <div><b>CrowdmoniT</b><span>Know the crowd before you go</span></div>
+  </div>
+  <nav class="seg" aria-label="Views"><button id="nV" aria-current="true">Visitors</button><button id="nC" aria-current="false">Count</button><button id="nB" aria-current="false">For venues</button></nav>
+</header>
+
+<main id="vis">
+  <h2 id="vname" style="margin:16px 0 0">City Festival Grounds (demo)</h2>
+  <div class="chips" id="chips" role="group" aria-label="Choose where you are going"></div>
+  <section class="hero" id="hero" role="status" aria-live="polite"></section>
+
+  <section class="card">
+    <h3>Calm places right now</h3>
+    <div class="mute">Best spots to rest, wait or meet your family.</div>
+    <div id="comfort"></div>
+  </section>
+
+  <section class="card">
+    <h3>How does it feel there?</h3>
+    <div class="mute" id="repFor"></div>
+    <div class="b3"><button class="btn" data-r="0.35">Light</button><button class="btn" data-r="0.7">Busy</button><button class="btn" data-r="0.95">Packed</button></div>
+  </section>
+
+  <section class="card">
+    <h3>All areas</h3>
+    <div id="all"></div>
+  </section>
+
+  <section class="card">
+    <h3>Alerts</h3>
+    <ul class="feed" id="feed" aria-live="polite"></ul>
+  </section>
+  <p class="mute" id="note" style="text-align:center;margin-top:14px">Demo data is simulated.</p>
+</main>
+
+<main id="new" hidden>
+  <div class="big">Create your place or event</div>
+  <p class="mute" style="font-size:16px">Add the areas visitors should know about. You will get a QR code and a link to share.</p>
+  <div class="card">
+    <label for="nName"><b>Name</b></label>
+    <input id="nName" class="inp" placeholder="Example: Sri Murugan Temple Festival" maxlength="60">
+    <label for="nZones" style="display:block;margin-top:14px"><b>Areas and capacity</b></label>
+    <div class="mute">One per line: the name, a comma, then how many people it holds.</div>
+    <textarea id="nZones" class="inp" rows="6">Main gate, 500
+Prayer hall, 800
+Food stalls, 300
+Parking, 1000</textarea>
+    <button class="btn pri" id="nGo" style="width:100%;margin-top:14px">Create and get QR code</button>
+    <div class="mute" id="nErr" role="alert" style="margin-top:10px"></div>
+  </div>
+</main>
+
+<main id="cnt" hidden>
+  <div class="big">Count the crowd</div>
+  <p class="mute" style="font-size:16px">Staff and volunteers: tap + when people enter an area and − when they leave. Visitors see the change straight away.</p>
+  <div class="card" id="shareC" hidden><h3>Share with visitors</h3><div class="mute">Put this QR code at the gate. Visitors scan it to see live crowd status.</div><div id="shareQ" style="width:190px;margin:12px 0;background:#fff;padding:8px;border-radius:10px"></div><div class="mute" id="shareU" style="word-break:break-all"></div><div class="mute" id="staffU" style="word-break:break-all;margin-top:10px"></div></div>
+  <div class="card" id="cntList"></div>
+</main>
+
+<main id="ven" hidden>
+  <div class="big">Keep your crowd safe, calm and coming back.</div>
+  <p class="mute" style="font-size:16px">Visitors open a link or scan a QR code. No app to install. They see which areas are calm, which are packed, and the easiest way to reach a comfort zone.</p>
+  <div class="card">
+    <h3>Your live control room</h3>
+    <div class="mute">What your staff would see right now.</div>
+    <div class="stats" id="stats"></div>
+  </div>
+  <h2>Made for</h2>
+  <div class="who"><span>Temples</span><span>Festivals</span><span>Malls</span><span>Markets</span><span>Bus stands</span><span>Railway stations</span><span>College fests</span><span>Stadiums</span></div>
+  <h2>How it works</h2>
+  <div class="card"><ol class="steps"><li><b>Set up your zones.</b> Add gates, halls, queues and their capacity.</li><li><b>Count people.</b> Use gate counters, volunteers with phones, or visitor reports.</li><li><b>Visitors see it live.</b> Colour alerts and a safe path to calmer areas.</li></ol></div>
+  <h2>Sample pricing</h2>
+  <div class="card">
+    <div class="price"><span><h3>Free pilot</h3><span class="mute">Your first event, up to 4 zones</span></span><b>₹0</b></div>
+    <div class="price"><span><h3>Event pass</h3><span class="mute">One event, up to 10 zones</span></span><b>₹1,999</b></div>
+    <div class="price"><span><h3>Monthly</h3><span class="mute">One venue, unlimited events</span></span><b>₹3,999<small class="mute">/mo</small></b></div>
+    <div class="price"><span><h3>City or chain</h3><span class="mute">Many venues, one dashboard</span></span><b>Let’s talk</b></div>
+  </div>
+  <a class="btn pri" style="margin-top:16px" href="#new">Create your place now</a>
+  <a class="btn" style="margin-top:10px;display:block;text-align:center;text-decoration:none" href="mailto:hello@crowdmonit.app?subject=CrowdmoniT%20demo%20request">Book a free demo</a>
+</main>
+</div>
+
+<div class="sos" id="sosBar"><button id="sosBtn">SOS: send my location</button></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sosT"><div class="in">
+  <h3 id="sosT">Send emergency alert?</h3>
+  <p class="mute" id="sosMsg" style="font-size:15px"></p>
+  <div class="b3"><button class="btn" id="sosNo">Cancel</button><button class="btn red" id="sosYes">Send alert</button></div>
+</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+var Z=[
+{id:'gate',name:'Main gate',cap:800,n:300,adj:['food','park'],rep:0},
+{id:'food',name:'Food court',cap:500,n:310,adj:['gate','stage'],rep:0},
+{id:'stage',name:'Main stage',cap:1500,n:900,adj:['food','path','exit'],rep:0},
+{id:'path',name:'Temple path',cap:400,n:150,adj:['stage','exit'],rep:0},
+{id:'park',name:'Parking',cap:1000,n:400,adj:['gate'],rep:0},
+{id:'exit',name:'Exit B',cap:600,n:200,adj:['stage','path'],rep:0}];
+var sel='stage',alerts=[],tk=0,$=function(i){return document.getElementById(i)};
+function get(id){return Z.filter(function(z){return z.id===id})[0]}
+function pct(z){return Math.round(z.n/z.cap*100)}
+function lvl(z){var p=pct(z);return p>=85?'bad':p>=60?'warn':'ok'}
+function word(l){return l==='bad'?'Packed':l==='warn'?'Busy':'Calm'}
+function clock(){var d=new Date();return d.getHours()+':'+('0'+d.getMinutes()).slice(-2)}
+function addAlert(l,t){alerts.unshift({t:clock(),l:l,x:t});alerts=alerts.slice(0,6);if(l==='bad'){try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}}
+function lighter(z){var b=null;z.adj.forEach(function(i){var a=get(i);if(!b||pct(a)<pct(b))b=a});return b||z}
+function route(z){
+  if(lvl(z)==='ok')return null;
+  var q=[[z]],seen={};seen[z.id]=1;
+  while(q.length){var p=q.shift(),la=p[p.length-1];
+    var nb=la.adj.slice().sort(function(x,y){return pct(get(x))-pct(get(y))});for(var i=0;i<nb.length;i++){var a=get(nb[i]);if(seen[a.id])continue;seen[a.id]=1;
+      if(lvl(a)==='ok')return p.concat([a]);if(lvl(a)==='warn')q.push(p.concat([a]))}}
+  return null}
+var LIVE=false,VID=null,started=false;
+function checkAlert(z,b){var a=lvl(z);if(a===b)return;
+  if(a==='bad'){var s=lighter(z);addAlert('bad',z.name+' is packed ('+pct(z)+'%). Avoid it. '+s.name+' is clearer ('+pct(s)+'%).')}
+  else if(b==='bad')addAlert('ok',z.name+' has eased to '+pct(z)+'%.');
+  else if(a==='warn')addAlert('warn',z.name+' is getting busy ('+pct(z)+'%).')}
+function tick(){
+  if(LIVE)return;
+  tk++;
+  Z.forEach(function(z){
+    var b=lvl(z);
+    z.n+=Math.round((Math.random()-.5)*z.cap*.07+(.5-z.n/z.cap)*z.cap*.02);
+    if(tk%8===0&&z.id==='stage')z.n+=Math.round(z.cap*.25);
+    z.n=Math.max(0,Math.min(Math.round(z.cap*1.1),z.n));
+    var a=lvl(z);
+    if(a!==b){
+      if(a==='bad'){var s=lighter(z);addAlert('bad',z.name+' is packed ('+pct(z)+'%). Avoid it. '+s.name+' is clearer ('+pct(s)+'%).')}
+      else if(b==='bad')addAlert('ok',z.name+' has eased to '+pct(z)+'%.');
+      else if(a==='warn')addAlert('warn',z.name+' is getting busy ('+pct(z)+'%).')}
+  });
+  render()}
+function render(){
+  if(!Z.length){$('hero').innerHTML='<div><div class="v">Loading…</div></div>';$('chips').innerHTML='';return}
+  var z=get(sel),l=lvl(z),s=lighter(z),rt=route(z);
+  $('chips').innerHTML=Z.map(function(x){return '<button class="chip" data-id="'+x.id+'" aria-pressed="'+(x.id===sel)+'"><i class="'+lvl(x)+'"></i>'+x.name+'</button>'}).join('');
+  var v=l==='bad'?'Avoid for now':l==='warn'?'Go slow':'Good to go';
+  var why=l==='bad'?'Too crowded to move safely ('+pct(z)+'% full). Wait 15 minutes or head to '+s.name+'.'
+    :l==='warn'?'Getting busy ('+pct(z)+'% full). Allow extra time or try '+s.name+'.'
+    :'Plenty of space ('+pct(z)+'% full). Walk in and enjoy.';
+  $('hero').innerHTML='<div class="signal" aria-hidden="true"><span class="lamp '+(l==='bad'?'on ':'')+'bad"></span><span class="lamp '+(l==='warn'?'on ':'')+'warn"></span><span class="lamp '+(l==='ok'?'on ':'')+'ok"></span></div>'+
+    '<div><div class="where">'+z.name+'</div><div class="v">'+v+'</div><p>'+why+'</p>'+
+    (rt?'<div class="route" style="color:#10243a;background:#fff"><b>Safe path:</b> '+rt.map(function(x){return x.name}).join(' → ')+'</div>':'')+'</div>';
+  var calm=Z.filter(function(x){return lvl(x)==='ok'}).sort(function(a,b){return pct(a)-pct(b)});
+  $('comfort').innerHTML=calm.length?calm.map(function(x){return '<button class="row" data-id="'+x.id+'"><span><b>'+x.name+'</b><div class="mute">'+x.n.toLocaleString()+' people</div></span><span class="pill ok">'+pct(x)+'% full</span></button>'}).join(''):'<div class="route">No calm area right now. Stay near an exit and watch alerts.</div>';
+  $('repFor').textContent='Tell others about '+z.name+(z.rep?' · '+z.rep+' report'+(z.rep>1?'s':'')+' so far':'');
+  $('all').innerHTML=Z.slice().sort(function(a,b){return pct(b)-pct(a)}).map(function(x){var k=lvl(x);return '<button class="row" data-id="'+x.id+'"><span><b>'+x.name+'</b><div class="bar"><i class="'+k+'" style="width:'+Math.min(100,pct(x))+'%"></i></div></span><span class="pill '+k+'">'+word(k)+' '+pct(x)+'%</span></button>'}).join('');
+  $('feed').innerHTML=alerts.length?alerts.map(function(a){return '<li><i class="'+a.l+'" style="width:10px;height:10px;border-radius:50%;margin-top:7px;flex:none"></i><span class="t">'+a.t+'</span><span>'+a.x+'</span></li>'}).join(''):'<li class="mute">No alerts yet. Warnings appear here when areas fill up.</li>';
+  $('cntList').innerHTML=(VID&&!getKey(VID))?'<div class="mute">Counting needs the staff link from the organiser.</div>':Z.map(function(x){var k=lvl(x);return '<div class="ctr"><div><b>'+x.name+'</b><div class="mute">'+x.n.toLocaleString()+' of '+x.cap.toLocaleString()+' · '+word(k)+'</div></div><div class="cb"><button class="btn" data-z="'+x.id+'" data-c="-10" aria-label="Remove 10 from '+x.name+'">−10</button><button class="btn" data-z="'+x.id+'" data-c="-1" aria-label="Remove 1 from '+x.name+'">−1</button><button class="btn" data-z="'+x.id+'" data-c="1" aria-label="Add 1 to '+x.name+'">+1</button><button class="btn" data-z="'+x.id+'" data-c="10" aria-label="Add 10 to '+x.name+'">+10</button></div></div>'}).join('');
+  var tot=Z.reduce(function(a,x){return a+x.n},0),pk=Z.filter(function(x){return lvl(x)==='bad'}).length,top=Z.slice().sort(function(a,b){return pct(b)-pct(a)})[0];
+  $('stats').innerHTML='<div><b>'+tot.toLocaleString()+'</b><span>People on site</span></div><div><b>'+pk+'</b><span>Packed zones</span></div><div><b>'+pct(top)+'%</b><span>'+top.name+'</span></div>'}
+document.addEventListener('click',function(e){
+  var c=e.target.closest('[data-id]');if(c){sel=c.getAttribute('data-id');render();if(e.target.closest('.row'))window.scrollTo({top:0,behavior:'smooth'});return}
+  var r=e.target.closest('[data-r]');
+  if(r){var z=get(sel);if(!LIVE)z.n=Math.round(z.n*.6+parseFloat(r.getAttribute('data-r'))*z.cap*.4);z.rep++;sendReport(z);addAlert('warn','Report received for '+z.name+'. Thank you.');render()}});
+document.addEventListener('click',function(e){var c=e.target.closest('[data-c]');if(!c)return;var z=get(c.getAttribute('data-z')),b=lvl(z);z.n=Math.max(0,Math.min(Math.round(z.cap*1.1),z.n+parseInt(c.getAttribute('data-c'),10)));sendCount(z,parseInt(c.getAttribute('data-c'),10));if(!LIVE)checkAlert(z,b);render()});
+function view(){var h=location.hash.slice(1),m=h.match(/^([vc])-([a-z0-9]+)$/),v='vis';
+  if(m){v=m[1]==='c'?'cnt':'vis';load(m[2])}else if(h==='venues')v='ven';else if(h==='new')v='new';else{v=h==='count'?'cnt':'vis';load(null)}
+  $('vis').hidden=v!=='vis';$('cnt').hidden=v!=='cnt';$('ven').hidden=v!=='ven';$('new').hidden=v!=='new';$('sosBar').hidden=v!=='vis';$('nV').setAttribute('aria-current',v==='vis');$('nC').setAttribute('aria-current',v==='cnt');$('nB').setAttribute('aria-current',v==='ven');window.scrollTo(0,0)}
+$('nV').onclick=function(){location.hash=VID?'v-'+VID:'visitors'};
+$('nB').onclick=function(){location.hash='venues'};
+$('nC').onclick=function(){location.hash=VID?'c-'+VID:'count'};
+window.addEventListener('hashchange',view);
+var sh=$('sheet');
+$('sosBtn').onclick=function(){$('sosT').textContent='Send emergency alert?';$('sosMsg').textContent='This shares your area ('+get(sel).name+') with your trusted contacts and venue staff.';$('sosYes').style.display='';sh.classList.add('open')};
+$('sosNo').onclick=function(){sh.classList.remove('open')};
+$('sosYes').onclick=function(){$('sosT').textContent='Alert sent (demo)';$('sosMsg').textContent='In the live app, staff and your contacts would now get your location.';this.style.display='none';addAlert('bad','You sent an SOS from '+get(sel).name+'.');render()};
+var timer=null,KEYS={};
+try{KEYS=JSON.parse(localStorage.getItem('cm_keys')||'{}')}catch(e){}
+function getKey(id){return KEYS[id]||''}
+function setKey(id,k){KEYS[id]=k;try{localStorage.setItem('cm_keys',JSON.stringify(KEYS))}catch(e){}}
+function clean(s){return String(s||'').replace(/[<>&"'`]/g,'')}
+function api(p,o){return fetch('/api/'+p,o).then(function(r){return r.json().then(function(j){if(!r.ok)throw j;return j})})}
+function sendCount(z,d){if(!LIVE||!VID)return;api('venues/'+VID+'/count',{method:'POST',headers:{'content-type':'application/json','x-staff-key':getKey(VID)},body:JSON.stringify({zone:z.id,delta:d})}).catch(function(){fetchVenue(VID)})}
+function sendReport(z){if(!LIVE||!VID)return;api('venues/'+VID+'/report',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({zone:z.id})}).catch(function(){})}
+var DEF=JSON.parse(JSON.stringify(Z));
+function renderShare(){var c=$('shareC');if(!VID){c.hidden=true;return}c.hidden=false;var u=location.origin+'/#v-'+VID;$('shareU').textContent=u;$('staffU').textContent=getKey(VID)?'Staff link (keep private): '+location.origin+'/?key='+getKey(VID)+'#c-'+VID:'';$('shareQ').innerHTML='';try{var q=qrcode(0,'M');q.addData(u);q.make();$('shareQ').innerHTML=q.createSvgTag(5)}catch(e){}}
+function fetchVenue(id){api('venues/'+id).then(function(v){
+  if(VID!==id)return;
+  $('vname').textContent=v.name;
+  v.zones.forEach(function(d){var z=get(d.id);if(!z){z={id:d.id,name:clean(d.name),cap:1,n:0,adj:[],rep:0};Z.push(z)}var b=lvl(z);z.n=d.n;z.cap=d.cap;z.rep=d.rep;if(LIVE)checkAlert(z,b)});
+  Z.forEach(function(z){z.adj=Z.filter(function(o){return o!==z}).map(function(o){return o.id})});
+  if(!sel||!get(sel))sel=Z[0].id;
+  LIVE=true;$('note').textContent='Live counts from venue staff.';render()
+}).catch(function(){if(VID===id&&!LIVE)$('vname').textContent='Place not found'})}
+function load(id){
+  if(started&&id===VID)return;started=true;VID=id;clearInterval(timer);LIVE=false;alerts=[];
+  var q=new URLSearchParams(location.search).get('key');if(q&&id){setKey(id,q);try{history.replaceState(null,'',location.pathname+location.hash)}catch(e){}}
+  if(!id){Z=JSON.parse(JSON.stringify(DEF));sel='stage';$('vname').textContent='City Festival Grounds (demo)';$('note').textContent='Demo data is simulated.'}
+  else{Z=[];sel=null;$('vname').textContent='Loading this place\u2026';$('note').textContent='';fetchVenue(id);timer=setInterval(function(){fetchVenue(id)},3000)}
+  render();renderShare()
+}
+$('nGo').onclick=function(){
+  var err=$('nErr');err.textContent='';
+  var name=$('nName').value.trim().replace(/[<>&"'`]/g,'');
+  var lines=$('nZones').value.split('\n').map(function(s){return s.trim()}).filter(Boolean).slice(0,12);
+  if(!name||!lines.length){err.textContent='Enter a name and at least one area.';return}
+  var zones=lines.map(function(l){var p=l.split(',');return{name:p[0],cap:parseInt(p[1],10)}});
+  api('venues',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:name,zones:zones})}).then(function(r){setKey(r.id,r.key);location.hash='c-'+r.id}).catch(function(e){err.textContent=(e&&e.error)||'Could not save. Please try again.'})
+};
+render();view();setInterval(tick,3000);
+</script>
+</body>
+</html>
